@@ -1,0 +1,515 @@
+<style>
+:root{--bg:#0d1117;--sf:#161b22;--sf2:#21262d;--bd:#30363d;--tx:#e6edf3;--mt:#7d8590;--c1:#3b82f6;--c2:#ef4444;--c3:#10b981;--c4:#f59e0b;--cG:#22c55e;--cY:#f59e0b;--cR:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding:20px}
+.hdr{text-align:center;margin-bottom:18px}
+.hdr h1{font-size:23px;font-weight:700}
+.hdr p{color:var(--mt);font-size:12px;margin-top:3px}
+.pill{display:inline-block;background:var(--sf2);border:1px solid var(--bd);padding:5px 14px;border-radius:20px;font-size:11px;color:var(--mt);margin-top:8px;font-style:italic}
+.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:18px}
+.tab{padding:9px 18px;cursor:pointer;font-size:12px;font-weight:500;color:var(--mt);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab:hover{color:var(--tx)}
+.tab.on{color:var(--tx);border-bottom-color:var(--tx)}
+.pane{display:none}.pane.on{display:block}
+.st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mt);margin-bottom:10px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.sc{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:12px 16px;text-align:center;flex:1;min-width:110px;border-top:3px solid}
+.sc .n{font-size:20px;font-weight:700}.sc .l{font-size:10px;color:var(--mt);margin-top:2px}
+.ag{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:10px;margin-bottom:18px}
+.ac{background:var(--sf);border-radius:8px;padding:14px;border-top:3px solid;cursor:pointer;transition:transform .12s}
+.ac:hover{transform:translateY(-2px)}
+.act{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ac h3{font-size:13px;font-weight:600;margin:4px 0}
+.acn{font-size:18px;font-weight:700}
+.acd{font-size:10px;color:var(--mt);line-height:1.5;margin-top:4px}
+.ach{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.hp{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px}
+.frow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.fb{padding:5px 12px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);cursor:pointer;font-size:11px;font-weight:500;transition:all .12s}
+.fb:hover{border-color:var(--mt)}
+.fb.on{color:#fff;border-color:transparent}
+.sep{width:1px;height:18px;background:var(--bd)}
+.ghdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.leg{display:flex;gap:10px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mt)}
+.ld{width:8px;height:8px;border-radius:50%}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;margin-bottom:20px}
+.cc{background:var(--sf);border-radius:6px;padding:9px 11px;border-left:3px solid;transition:background .1s;position:relative}
+.cc:hover{background:var(--sf2)}
+.cn{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:14px}
+.ci{font-size:10px;color:var(--mt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.cbrow{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;align-items:center}
+.badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;display:inline-block}
+.hdot{position:absolute;top:9px;right:9px;width:7px;height:7px;border-radius:50%}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.card{background:var(--sf);border-radius:8px;padding:14px}
+.irow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.il{font-size:11px;color:var(--mt);width:140px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ibg{flex:1;background:var(--sf2);border-radius:2px;height:15px;overflow:hidden}
+.ibar{height:100%;display:flex;align-items:center;padding-left:5px;font-size:9px;font-weight:700}
+.tlist{list-style:none}
+.tlist li{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd);font-size:11px}
+.tlist li:last-child{border:0}
+.tlist .tn{font-weight:600;font-size:12px}
+.tlist .tl{display:flex;align-items:center;gap:6px}
+.note{font-size:10px;color:var(--mt);padding:12px;background:var(--sf);border-radius:6px;border-left:3px solid var(--bd);margin-bottom:14px;line-height:1.6}
+.ucg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.callout{background:#1a1f2e;border:1px solid #3b82f633;border-left:3px solid #3b82f6;border-radius:6px;padding:14px;margin-bottom:14px;font-size:11px;line-height:1.7;color:#c9d1d9}
+.callout strong{color:var(--tx)}
+@media(max-width:680px){.tg,.ucg{grid-template-columns:1fr}}
+</style>
+
+<div class="hdr">
+  <h1>samdesk · ICP Dashboard v2</h1>
+  <p>+ Contract Value · Customer Health · Use Cases</p>
+  <div class="pill">"Organizations where real-world disruption impacts operations in real time"</div>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="T(0)">🏢 Companies</div>
+  <div class="tab" onclick="T(1)">💰 Revenue & Risk</div>
+  <div class="tab" onclick="T(2)">🎯 Use Cases</div>
+</div>
+
+<div class="pane on" id="p0"></div>
+<div class="pane" id="p1"></div>
+<div class="pane" id="p2"></div>
+
+<script>
+const ICP={1:{l:"ICP 1",n:"Operationally Distributed",c:"#3b82f6",d:"Logistics, transport & mobility with constant asset movement and real-time disruption exposure."},2:{l:"ICP 2",n:"Corporate Security / GSOC",c:"#ef4444",d:"Enterprises with security ops needing to connect fragmented signals to business impact."},3:{l:"ICP 3",n:"Government & Defense",c:"#10b981",d:"Public sector needing verified situational awareness across regions and agencies."},4:{l:"ICP 4",n:"High-Risk / High-Regulation",c:"#f59e0b",d:"Energy, finance & pharma with duty of care, compliance, and operational risk exposure."}};
+const SZ={E:{l:"Enterprise",c:"#c084fc"},L:{l:"Large",c:"#60a5fa"},M:{l:"Mid-Market",c:"#4ade80"},S:{l:"SMB/Startup",c:"#9ca3af"}};
+const UCM={
+  "FAM":{l:"GSOC · Fixed Asset Monitoring",c:"#3b82f6"},
+  "PSF":{l:"GSOC · Personnel Safety",c:"#8b5cf6"},
+  "PSM":{l:"GSOC · Personnel Safety (Mobile)",c:"#a78bfa"},
+  "SCM":{l:"GSOC · Supply Chain Monitoring",c:"#06b6d4"},
+  "CTM":{l:"GSOC · Crime & Threat Mgmt",c:"#f97316"},
+  "EP":{l:"Executive Protection",c:"#ec4899"},
+  "TRM":{l:"Travel Risk Management",c:"#14b8a6"},
+  "IPS":{l:"INT · Public Safety",c:"#10b981"},
+  "ICT":{l:"INT · Crime & Threat",c:"#f59e0b"},
+  "IEG":{l:"INT · Economics & Geopolitics",c:"#6366f1"},
+  "INS":{l:"INT · National Security",c:"#ef4444"},
+  "CON":{l:"Consulting / Reseller",c:"#9ca3af"},
+  "RES":{l:"Research",c:"#6b7280"},
+  "MED":{l:"Media",c:"#d97706"},
+  "BRS":{l:"Brand Safety",c:"#7c3aed"},
+  "":{l:"Unknown",c:"#374151"}
+};
+
+// n=name, ind=industry, icp, sz, arr=contract amount, seats(-1=enterprise/unlimited), h=health(G/Y/R/""), u1/u2=use cases
+const C=[
+  {n:"ZeroEyes",ind:"Security & Investigations",icp:2,sz:"M",arr:60000,seats:5,h:"",u1:"FAM",u2:""},
+  {n:"Big Bison Logistics",ind:"Security & Investigations",icp:2,sz:"S",arr:25000,seats:3,h:"R",u1:"EP",u2:""},
+  {n:"Vertriax",ind:"News Media",icp:2,sz:"S",arr:40000,seats:8,h:"",u1:"FAM",u2:"EP"},
+  {n:"Home Solutions",ind:"Facilities Services",icp:2,sz:"S",arr:175000,seats:3,h:"",u1:"CON",u2:""},
+  {n:"West Coast University",ind:"Higher Education",icp:3,sz:"L",arr:38000,seats:7,h:"G",u1:"PSF",u2:"FAM"},
+  {n:"Dytronix",ind:"Computer Software",icp:2,sz:"S",arr:25000,seats:3,h:"",u1:"PSF",u2:""},
+  {n:"East-West",ind:"Consumer Services",icp:2,sz:"S",arr:20000,seats:3,h:"G",u1:"FAM",u2:""},
+  {n:"FanDuel",ind:"Gambling & Casinos",icp:2,sz:"L",arr:45000,seats:5,h:"Y",u1:"FAM",u2:"EP"},
+  {n:"Clayco",ind:"Construction",icp:2,sz:"L",arr:40000,seats:5,h:"",u1:"PSF",u2:""},
+  {n:"Foresight Security",ind:"Professional Training",icp:2,sz:"S",arr:25000,seats:3,h:"G",u1:"FAM",u2:"EP"},
+  {n:"New Balance",ind:"Apparel & Fashion",icp:2,sz:"L",arr:55000,seats:25,h:"G",u1:"FAM",u2:"EP"},
+  {n:"Black Box Security",ind:"Consumer Services",icp:2,sz:"S",arr:40000,seats:5,h:"G",u1:"EP",u2:"FAM"},
+  {n:"Saks Global",ind:"Luxury Goods",icp:2,sz:"L",arr:50000,seats:13,h:"Y",u1:"FAM",u2:""},
+  {n:"Aritzia",ind:"Retail",icp:2,sz:"L",arr:25000,seats:9,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"Paladin Risk Solutions",ind:"Professional Training",icp:2,sz:"S",arr:70000,seats:7,h:"G",u1:"FAM",u2:"PSM"},
+  {n:"IMF",ind:"Intl Trade & Dev",icp:3,sz:"L",arr:49000,seats:10,h:"",u1:"FAM",u2:"PSF"},
+  {n:"CNA Insurance",ind:"Insurance",icp:4,sz:"L",arr:60000,seats:10,h:"",u1:"",u2:""},
+  {n:"The Mosaic Company",ind:"Mining & Materials",icp:4,sz:"E",arr:45000,seats:5,h:"G",u1:"FAM",u2:""},
+  {n:"Canada Goose",ind:"Apparel & Fashion",icp:2,sz:"L",arr:50000,seats:7,h:"",u1:"FAM",u2:"TRM"},
+  {n:"AMD",ind:"Semiconductors",icp:2,sz:"E",arr:45000,seats:7,h:"Y",u1:"EP",u2:""},
+  {n:"99 Tecnologia",ind:"Transportation",icp:1,sz:"L",arr:50000,seats:5,h:"Y",u1:"FAM",u2:"PSM"},
+  {n:"TorchStone Global",ind:"Security & Investigations",icp:2,sz:"S",arr:80000,seats:10,h:"G",u1:"FAM",u2:"TRM"},
+  {n:"CPKC Railway",ind:"Transportation",icp:1,sz:"E",arr:20000,seats:2,h:"Y",u1:"FAM",u2:"PSF"},
+  {n:"SIG (Susquehanna)",ind:"Financial Services",icp:4,sz:"L",arr:25000,seats:3,h:"G",u1:"FAM",u2:""},
+  {n:"American Eagle Outfitters",ind:"Retail",icp:2,sz:"E",arr:75000,seats:15,h:"G",u1:"FAM",u2:"SCM"},
+  {n:"Fidelity Investments",ind:"Financial Services",icp:4,sz:"E",arr:145000,seats:50,h:"G",u1:"TRM",u2:"FAM"},
+  {n:"Meta Platforms",ind:"Computer Software",icp:2,sz:"E",arr:106750,seats:10,h:"Y",u1:"PSF",u2:"FAM"},
+  {n:"Procter & Gamble",ind:"Consumer Goods",icp:2,sz:"E",arr:60000,seats:10,h:"Y",u1:"EP",u2:"FAM"},
+  {n:"Gilead Sciences",ind:"Pharmaceuticals",icp:4,sz:"E",arr:60000,seats:10,h:"G",u1:"FAM",u2:"EP"},
+  {n:"Bell Media",ind:"Telecommunications",icp:2,sz:"L",arr:60000,seats:15,h:"G",u1:"PSF",u2:"FAM"},
+  {n:"Ford Motor Company",ind:"Automotive",icp:1,sz:"E",arr:60000,seats:15,h:"G",u1:"FAM",u2:"SCM"},
+  {n:"Common Wealth Partners",ind:"Real Estate",icp:2,sz:"S",arr:39000,seats:6,h:"",u1:"FAM",u2:""},
+  {n:"Cyber Harpoon",ind:"Security & Investigations",icp:2,sz:"S",arr:25000,seats:3,h:"Y",u1:"FAM",u2:"PSF"},
+  {n:"State of Hawaii Judiciary",ind:"Government Administration",icp:3,sz:"L",arr:70000,seats:6,h:"R",u1:"PSF",u2:"EP"},
+  {n:"Riot Games",ind:"Computer Games",icp:2,sz:"L",arr:60000,seats:15,h:"",u1:"FAM",u2:"PSF"},
+  {n:"Wayve",ind:"Automotive",icp:1,sz:"M",arr:60000,seats:10,h:"G",u1:"FAM",u2:"SCM"},
+  {n:"State of Alaska DPS",ind:"Government Administration",icp:3,sz:"L",arr:7000,seats:2,h:"Y",u1:"CTM",u2:"IPS"},
+  {n:"Vast Space",ind:"Defense & Space",icp:3,sz:"S",arr:47250,seats:7,h:"G",u1:"FAM",u2:"SCM"},
+  {n:"Guardian Advisory",ind:"Security & Investigations",icp:2,sz:"S",arr:40000,seats:5,h:"",u1:"PSF",u2:"PSM"},
+  {n:"Alberta Investment Mgmt",ind:"Investment Management",icp:4,sz:"M",arr:25000,seats:3,h:"G",u1:"FAM",u2:"EP"},
+  {n:"Perkins Coie LLP",ind:"Legal Services",icp:4,sz:"L",arr:40000,seats:3,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"Anthropic",ind:"IT & Services",icp:2,sz:"M",arr:100000,seats:45,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"Zoox",ind:"Automotive",icp:1,sz:"L",arr:25000,seats:3,h:"R",u1:"SCM",u2:""},
+  {n:"Qualtrics",ind:"Computer Software",icp:2,sz:"L",arr:60000,seats:10,h:"Y",u1:"FAM",u2:"TRM"},
+  {n:"Motional",ind:"Automotive",icp:1,sz:"M",arr:42800,seats:5,h:"Y",u1:"FAM",u2:"ICT"},
+  {n:"Marvell Technology",ind:"Semiconductors",icp:2,sz:"L",arr:75000,seats:15,h:"",u1:"",u2:""},
+  {n:"Pembina Pipeline",ind:"Oil & Energy",icp:4,sz:"L",arr:25000,seats:3,h:"G",u1:"FAM",u2:""},
+  {n:"ESRI",ind:"IT & Services",icp:2,sz:"L",arr:45000,seats:5,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"Metro Transit",ind:"Transportation",icp:1,sz:"L",arr:84500,seats:10,h:"Y",u1:"PSM",u2:""},
+  {n:"Provincial Emergency Ops ON",ind:"Government Administration",icp:3,sz:"L",arr:26500,seats:3,h:"G",u1:"IPS",u2:"FAM"},
+  {n:"AAA",ind:"Insurance",icp:4,sz:"E",arr:71200,seats:10,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"DoorDash",ind:"Logistics & Supply Chain",icp:1,sz:"L",arr:405000,seats:30,h:"G",u1:"PSM",u2:""},
+  {n:"Grubhub",ind:"Logistics & Supply Chain",icp:1,sz:"L",arr:140000,seats:60,h:"G",u1:"PSM",u2:""},
+  {n:"Instacart (Maplebear)",ind:"Logistics & Supply Chain",icp:1,sz:"L",arr:144450,seats:-1,h:"G",u1:"FAM",u2:"PSM"},
+  {n:"Nutrien",ind:"Chemicals",icp:4,sz:"E",arr:66300,seats:6,h:"G",u1:"FAM",u2:"TRM"},
+  {n:"University of Alberta",ind:"Higher Education",icp:3,sz:"L",arr:0,seats:0,h:"G",u1:"FAM",u2:"TRM"},
+  {n:"Palantir Technologies",ind:"Computer Software",icp:3,sz:"L",arr:84000,seats:20,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"UnitedHealth Group",ind:"Pharmaceuticals",icp:4,sz:"E",arr:98000,seats:25,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"ExxonMobil",ind:"Oil & Energy",icp:4,sz:"E",arr:90000,seats:30,h:"G",u1:"FAM",u2:"EP"},
+  {n:"Suncor",ind:"Oil & Energy",icp:4,sz:"E",arr:27100,seats:4,h:"Y",u1:"FAM",u2:"PSM"},
+  {n:"FEMA",ind:"Government Administration",icp:3,sz:"E",arr:220800,seats:15,h:"Y",u1:"IPS",u2:"FAM"},
+  {n:"Comcast",ind:"Telecommunications",icp:2,sz:"E",arr:45000,seats:0,h:"Y",u1:"FAM",u2:""},
+  {n:"NBA",ind:"Leisure & Tourism",icp:1,sz:"L",arr:60000,seats:13,h:"",u1:"",u2:""},
+  {n:"FedEx",ind:"Transportation",icp:1,sz:"E",arr:80000,seats:20,h:"G",u1:"FAM",u2:"PSM"},
+  {n:"MK4 Solutions",ind:"Government Administration",icp:3,sz:"S",arr:7225,seats:1,h:"",u1:"",u2:""},
+  {n:"FedEx APAC",ind:"Logistics & Supply Chain",icp:1,sz:"E",arr:32100,seats:3,h:"G",u1:"FAM",u2:""},
+  {n:"Trimont LLC",ind:"Commercial Real Estate",icp:4,sz:"M",arr:21000,seats:3,h:"",u1:"FAM",u2:"PSF"},
+  {n:"MSB",ind:"Military",icp:3,sz:"M",arr:25000,seats:10,h:"",u1:"",u2:""},
+  {n:"GPA SA",ind:"Security & Investigations",icp:2,sz:"M",arr:26562,seats:3,h:"R",u1:"CON",u2:"RES"},
+  {n:"Audere Securus",ind:"Security & Investigations",icp:2,sz:"S",arr:25000,seats:3,h:"Y",u1:"CON",u2:""},
+  {n:"Geodata Systems",ind:"Computer Software",icp:2,sz:"S",arr:65000,seats:5,h:"G",u1:"INS",u2:"PSF"},
+  {n:"Caritas",ind:"Non-Profit / NGO",icp:3,sz:"L",arr:10000,seats:3,h:"R",u1:"RES",u2:""},
+  {n:"ITA Airways",ind:"Airlines / Aviation",icp:1,sz:"E",arr:49461,seats:10,h:"G",u1:"FAM",u2:"PSM"},
+  {n:"Portcullis Acuity",ind:"Security & Investigations",icp:2,sz:"S",arr:20000,seats:3,h:"R",u1:"CON",u2:""},
+  {n:"Canary Wharf Group",ind:"Real Estate",icp:2,sz:"M",arr:30000,seats:3,h:"G",u1:"FAM",u2:"RES"},
+  {n:"Sibylline Ltd",ind:"Professional Training",icp:2,sz:"M",arr:250000,seats:5,h:"Y",u1:"CON",u2:""},
+  {n:"NATO",ind:"Military",icp:3,sz:"E",arr:235000,seats:20,h:"G",u1:"FAM",u2:"IEG"},
+  {n:"Crisis24",ind:"Security & Investigations",icp:2,sz:"M",arr:250000,seats:0,h:"Y",u1:"CON",u2:""},
+  {n:"Ripple",ind:"Internet / Crypto",icp:4,sz:"L",arr:50000,seats:3,h:"G",u1:"FAM",u2:"PSM"},
+  {n:"Max Security",ind:"Security & Investigations",icp:2,sz:"M",arr:250000,seats:20,h:"G",u1:"CON",u2:"RES"},
+  {n:"Amnesty International",ind:"Non-Profit / NGO",icp:3,sz:"L",arr:0,seats:-1,h:"Y",u1:"RES",u2:""},
+  {n:"Macquarie Group",ind:"Financial Services",icp:4,sz:"E",arr:64200,seats:15,h:"G",u1:"FAM",u2:"PSF"},
+  {n:"Boehringer-Ingelheim",ind:"Pharmaceuticals",icp:4,sz:"E",arr:165000,seats:130,h:"G",u1:"FAM",u2:""},
+  {n:"John Deere",ind:"Industrial Engineering",icp:1,sz:"E",arr:25000,seats:3,h:"Y",u1:"EP",u2:"FAM"},
+  {n:"UK Ministry of Defence",ind:"Defense & Space",icp:3,sz:"E",arr:377203,seats:50,h:"Y",u1:"IEG",u2:"INS"},
+  {n:"THG plc",ind:"Computer Software",icp:2,sz:"E",arr:55000,seats:10,h:"G",u1:"FAM",u2:"ICT"},
+  {n:"Fulton County Schools",ind:"Primary/Secondary Education",icp:3,sz:"L",arr:30000,seats:5,h:"G",u1:"FAM",u2:"PSM"},
+  {n:"Booking.com",ind:"Hospitality",icp:1,sz:"E",arr:75000,seats:10,h:"G",u1:"IEG",u2:"RES"},
+  {n:"Uber Technologies",ind:"Transportation",icp:1,sz:"E",arr:123000,seats:62,h:"Y",u1:"IEG",u2:"BRS"},
+  {n:"Associated Press",ind:"Information Services",icp:2,sz:"L",arr:62000,seats:-1,h:"R",u1:"MED",u2:"PSM"},
+  {n:"Citizen",ind:"Computer Software",icp:2,sz:"M",arr:0,seats:50,h:"G",u1:"MED",u2:""},
+  {n:"Nextdoor Holdings",ind:"Computer Software",icp:2,sz:"L",arr:100000,seats:0,h:"G",u1:"IPS",u2:""},
+  {n:"Accenture",ind:"IT & Services",icp:2,sz:"E",arr:75000,seats:10,h:"G",u1:"FAM",u2:"EP"},
+];
+
+let filt='all',hfilt='all';
+
+function fmt(n){return n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'k':'$'+n}
+function seats(s){return s===-1?'Ent/Unlim':s===0?'—':s}
+function icpC(i){return ICP[i].c}
+function szC(s){return SZ[s].c}
+function hColor(h){return h==='G'?'#22c55e':h==='Y'?'#f59e0b':h==='R'?'#ef4444':'#374151'}
+function ucColor(u){return UCM[u]?UCM[u].c:'#374151'}
+
+function filtered(){
+  return C.filter(c=>{
+    const icpOk=filt==='all'||filt===String(c.icp)||filt==='CON'&&(c.u1==='CON'||c.u2==='CON');
+    const hOk=hfilt==='all'||c.h===hfilt;
+    return icpOk&&hOk;
+  });
+}
+
+function T(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j===i));
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',j===i));
+}
+
+function totalARR(){return C.reduce((a,c)=>a+c.arr,0)}
+function atRiskARR(){return C.filter(c=>c.h==='R').reduce((a,c)=>a+c.arr,0)}
+function yellowARR(){return C.filter(c=>c.h==='Y').reduce((a,c)=>a+c.arr,0)}
+function arrByICP(i){return C.filter(c=>c.icp===i).reduce((a,c)=>a+c.arr,0)}
+
+// --- PANE 0: Companies ---
+function renderP0(){
+  const cnt={},hcnt={G:0,Y:0,R:0,'':0};
+  C.forEach(c=>{cnt[c.icp]=(cnt[c.icp]||0)+1;hcnt[c.h]=(hcnt[c.h]||0)+1});
+  let html=`<div class="stats">
+    <div class="sc" style="border-color:#444"><div class="n">${C.length}</div><div class="l">Customers</div></div>
+    ${[1,2,3,4].map(k=>`<div class="sc" style="border-color:${ICP[k].c}"><div class="n" style="color:${ICP[k].c}">${cnt[k]||0}</div><div class="l">${ICP[k].l}</div></div>`).join('')}
+    <div class="sc" style="border-color:#22c55e"><div class="n" style="color:#22c55e">${hcnt['G']}</div><div class="l">Healthy</div></div>
+    <div class="sc" style="border-color:#f59e0b"><div class="n" style="color:#f59e0b">${hcnt['Y']}</div><div class="l">At Risk</div></div>
+    <div class="sc" style="border-color:#ef4444"><div class="n" style="color:#ef4444">${hcnt['R']}</div><div class="l">Red</div></div>
+  </div>`;
+
+  html+=`<div class="st">ICP Archetypes — click to filter</div><div class="ag">`;
+  [1,2,3,4].forEach(k=>{
+    const kc=C.filter(c=>c.icp===k);
+    const kg=kc.filter(c=>c.h==='G').length,ky=kc.filter(c=>c.h==='Y').length,kr=kc.filter(c=>c.h==='R').length;
+    const karr=kc.reduce((a,c)=>a+c.arr,0);
+    html+=`<div class="ac" style="border-color:${ICP[k].c}" onclick="setFilt('${k}')">
+      <div class="act" style="color:${ICP[k].c}">${ICP[k].l}</div>
+      <h3>${ICP[k].n}</h3>
+      <div class="acn" style="color:${ICP[k].c}">${kc.length} <span style="font-size:12px;font-weight:400;color:var(--mt)">customers · ${fmt(karr)}</span></div>
+      <div class="acd">${ICP[k].d}</div>
+      <div class="ach">
+        <span class="hp" style="background:#22c55e22;color:#22c55e">G:${kg}</span>
+        <span class="hp" style="background:#f59e0b22;color:#f59e0b">Y:${ky}</span>
+        <span class="hp" style="background:#ef444422;color:#ef4444">R:${kr}</span>
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  html+=`<div class="frow" id="fbs"></div>`;
+  html+=`<div class="ghdr"><div class="st" id="gh" style="margin:0"></div>
+    <div class="leg">
+      <div class="li"><div class="ld" style="background:#22c55e"></div>Healthy</div>
+      <div class="li"><div class="ld" style="background:#f59e0b"></div>At Risk</div>
+      <div class="li"><div class="ld" style="background:#ef4444"></div>Red</div>
+      <div class="li"><div class="ld" style="background:#374151"></div>Unknown</div>
+    </div>
+  </div>`;
+  html+=`<div class="cg" id="cg"></div>`;
+  html+=`<div style="font-size:10px;color:var(--mt);text-align:center;border-top:1px solid var(--bd);padding-top:12px">⚠ Company sizes and contract amounts are as shown in HubSpot. Health: G=Green/Healthy, Y=Yellow/At-Risk, R=Red/High-Risk.</div>`;
+
+  document.getElementById('p0').innerHTML=html;
+  renderFilters();renderGrid();
+}
+
+function renderFilters(){
+  const btns=[
+    {f:'all',l:'All',c:'#555'},
+    {f:'1',l:'ICP 1: Transport',c:ICP[1].c},
+    {f:'2',l:'ICP 2: GSOC',c:ICP[2].c},
+    {f:'3',l:'ICP 3: Gov/Defense',c:ICP[3].c},
+    {f:'4',l:'ICP 4: High-Risk',c:ICP[4].c},
+    {f:'CON',l:'🤝 Partners/Resellers',c:'#9ca3af'},
+    null,
+    {f:'all',l:'All Health',c:'#555',hf:'all'},
+    {f:'all',l:'🟢 Healthy Only',c:'#22c55e',hf:'G'},
+    {f:'all',l:'🟡 Yellow',c:'#f59e0b',hf:'Y'},
+    {f:'all',l:'🔴 Red',c:'#ef4444',hf:'R'},
+  ];
+  document.getElementById('fbs').innerHTML=btns.map(b=>{
+    if(!b)return`<div class="sep"></div>`;
+    const isIcpBtn=b.hf===undefined;
+    const on=isIcpBtn?(filt===b.f):(hfilt===(b.hf));
+    const bg=on?b.c:'';
+    return`<button class="fb ${on?'on':''}" style="${on?`background:${bg};border-color:${bg}`:''}" onclick="${isIcpBtn?`setFilt('${b.f}')`:`setHFilt('${b.hf}')`}">${b.l}</button>`;
+  }).join('');
+}
+
+function setFilt(f){filt=f;renderFilters();renderGrid()}
+function setHFilt(h){hfilt=h;renderFilters();renderGrid()}
+
+function renderGrid(){
+  const f=filtered();
+  const lbl=filt==='all'?'All Companies':filt==='CON'?'Partners / Resellers':ICP[parseInt(filt)]?.n||'Filtered';
+  const hLbl=hfilt==='all'?'':(hfilt==='G'?' · Healthy':`· ${hfilt==='Y'?'Yellow':'Red'}`);
+  document.getElementById('gh').textContent=`${lbl}${hLbl} (${f.length})`;
+  document.getElementById('cg').innerHTML=f.map(c=>{
+    const hc=hColor(c.h);
+    const uc1=UCM[c.u1]||UCM[''];
+    return`<div class="cc" style="border-color:${icpC(c.icp)}" title="${c.n} | ${c.ind} | Est. ${c.sz==='E'?'Enterprise':c.sz==='L'?'Large':c.sz==='M'?'Mid-Market':'SMB'} | ${fmt(c.arr)} | ${seats(c.seats)} seats | ${uc1.l}">
+      <div class="hdot" style="background:${hc}${c.h?'':'55'}" title="Health: ${c.h||'Unknown'}"></div>
+      <div class="cn">${c.n}</div>
+      <div class="ci">${c.ind}</div>
+      <div class="cbrow">
+        <span class="badge" style="color:${szC(c.sz)};background:${szC(c.sz)}22">${SZ[c.sz].l}</span>
+        ${c.arr>0?`<span class="badge" style="color:#e6edf3;background:#ffffff11">${fmt(c.arr)}</span>`:`<span class="badge" style="color:#f59e0b;background:#f59e0b11">$0 ARR</span>`}
+        ${c.u1?`<span class="badge" style="color:${ucColor(c.u1)};background:${ucColor(c.u1)}22">${c.u1}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// --- PANE 1: Revenue & Risk ---
+function renderP1(){
+  const tot=totalARR(),atR=atRiskARR(),ylw=yellowARR();
+  const gArr=C.filter(c=>c.h==='G').reduce((a,c)=>a+c.arr,0);
+  const top=[...C].sort((a,b)=>b.arr-a.arr).slice(0,12);
+  const red=C.filter(c=>c.h==='R').sort((a,b)=>b.arr-a.arr);
+  const maxArr=Math.max(...C.map(c=>c.arr));
+
+  let html=`<div class="stats">
+    <div class="sc" style="border-color:#7d8590"><div class="n">${fmt(tot)}</div><div class="l">Total ARR</div></div>
+    <div class="sc" style="border-color:#22c55e"><div class="n" style="color:#22c55e">${fmt(gArr)}</div><div class="l">Healthy ARR</div></div>
+    <div class="sc" style="border-color:#f59e0b"><div class="n" style="color:#f59e0b">${fmt(ylw)}</div><div class="l">At-Risk ARR</div></div>
+    <div class="sc" style="border-color:#ef4444"><div class="n" style="color:#ef4444">${fmt(atR)}</div><div class="l">Red ARR</div></div>
+  </div>`;
+
+  html+=`<div class="tg">
+    <div class="card">
+      <div class="st">ARR by ICP Archetype</div>`;
+  [1,2,3,4].forEach(k=>{
+    const karr=arrByICP(k);
+    const pct=(karr/tot*100).toFixed(0);
+    html+=`<div class="irow"><div class="il" style="color:${ICP[k].c}">${ICP[k].l}: ${ICP[k].n.split('/')[0].trim()}</div>
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${ICP[k].c}33;border-left:3px solid ${ICP[k].c}">
+        <span style="color:${ICP[k].c}">${fmt(karr)}</span></div></div></div>`;
+  });
+  html+=`</div>
+    <div class="card">
+      <div class="st">Health Distribution by ARR</div>`;
+  [['G','Healthy','#22c55e'],['Y','At Risk','#f59e0b'],['R','Red / High Risk','#ef4444'],['','Unknown','#374151']].forEach(([h,l,col])=>{
+    const arr=C.filter(c=>c.h===h).reduce((a,c)=>a+c.arr,0);
+    const pct=(arr/tot*100).toFixed(0);
+    html+=`<div class="irow"><div class="il" style="color:${col}">${l}</div>
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}">
+        <span style="color:${col}">${fmt(arr)} (${pct}%)</span></div></div></div>`;
+  });
+  html+=`</div></div>`;
+
+  html+=`<div class="tg">
+    <div class="card">
+      <div class="st">Top 12 Accounts by ARR</div>
+      <ul class="tlist">`;
+  top.forEach(c=>{
+    html+=`<li>
+      <div class="tl">
+        <div style="width:8px;height:8px;border-radius:50%;background:${hColor(c.h)};flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;font-weight:600">${c.n}</div>
+          <div style="font-size:9px;color:var(--mt)">${ICP[c.icp].l} · ${c.u1||'—'}</div>
+        </div>
+      </div>
+      <div class="tn" style="color:${icpC(c.icp)}">${fmt(c.arr)}</div>
+    </li>`;
+  });
+  html+=`</ul></div>
+    <div class="card">
+      <div class="st">🔴 Red Accounts — Churn Risk</div>`;
+  if(red.length===0){html+=`<p style="color:var(--mt);font-size:12px">No red accounts — great!</p>`;}
+  else{
+    html+=`<ul class="tlist">`;
+    red.forEach(c=>{
+      html+=`<li>
+        <div class="tl">
+          <div>
+            <div style="font-size:11px;font-weight:600">${c.n}</div>
+            <div style="font-size:9px;color:var(--mt)">${ICP[c.icp].l} · ${c.ind} · ${c.u1||'—'}</div>
+          </div>
+        </div>
+        <div class="tn" style="color:#ef4444">${fmt(c.arr)}</div>
+      </li>`;
+    });
+    html+=`</ul>`;
+    const redUCs=red.map(c=>c.u1).filter(u=>u);
+    const conCount=red.filter(c=>c.u1==='CON'||c.u2==='CON').length;
+    html+=`<div style="margin-top:10px;font-size:10px;color:var(--mt);line-height:1.6">
+      <strong style="color:#e6edf3">Pattern:</strong> ${conCount} of ${red.length} red accounts are <strong style="color:#9ca3af">Consulting/Reseller</strong> use case — not core product users.
+      Consider whether these accounts are a product fit issue or a CS motion issue.
+    </div>`;
+  }
+  html+=`</div></div>`;
+
+  html+=`<div class="card" style="margin-bottom:14px">
+    <div class="st">$0 ARR Accounts (Pilots / Partnerships)</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">`;
+  C.filter(c=>c.arr===0).forEach(c=>{
+    html+=`<span style="background:${icpC(c.icp)}22;border:1px solid ${icpC(c.icp)}44;color:${icpC(c.icp)};padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600">${c.n}</span>`;
+  });
+  html+=`</div></div>`;
+
+  document.getElementById('p1').innerHTML=html;
+}
+
+// --- PANE 2: Use Cases ---
+function renderP2(){
+  const ucCount={},ucArr={};
+  C.forEach(c=>{
+    [c.u1,c.u2].forEach(u=>{
+      if(!u)return;
+      ucCount[u]=(ucCount[u]||0)+1;
+      ucArr[u]=(ucArr[u]||0)+c.arr;
+    });
+  });
+
+  const sorted=Object.entries(ucCount).sort((a,b)=>b[1]-a[1]);
+  const maxC=sorted[0][1];
+
+  // ICP × use case matrix
+  const matrix={};
+  C.forEach(c=>{
+    if(!matrix[c.icp])matrix[c.icp]={};
+    [c.u1,c.u2].forEach(u=>{
+      if(!u)return;
+      matrix[c.icp][u]=(matrix[c.icp][u]||0)+1;
+    });
+  });
+
+  const topUCs=['FAM','PSF','PSM','EP','TRM','SCM','IPS','IEG','CON'];
+
+  let html=`<div class="callout">
+    <strong>💡 Use case is your real segmentation axis — not industry, not archetype.</strong><br>
+    GSOC-FAM (Fixed Asset Monitoring) is the dominant entry point at ${ucCount['FAM']||0} accounts. TRM, EP, and INT tracks represent distinct buyer personas.
+    The <strong>CON (Consulting/Reseller)</strong> cluster is a separate channel motion worth deliberate investment — ${ucCount['CON']||0} accounts, 
+    high ARR, but fundamentally different product usage.
+  </div>`;
+
+  html+=`<div class="ucg">
+    <div class="card">
+      <div class="st">Use Case Frequency (primary + secondary)</div>`;
+  sorted.forEach(([uc,n])=>{
+    const meta=UCM[uc]||UCM[''];
+    const pct=(n/maxC*100).toFixed(0);
+    html+=`<div class="ucrow"><div class="ucl" style="color:${meta.c}" title="${meta.l}">${meta.l}</div>
+      <div class="ucbg"><div class="ucbar" style="width:${pct}%;background:${meta.c}55;border-left:3px solid ${meta.c}">
+        <span>${n}</span></div></div></div>`;
+  });
+  html+=`</div>
+    <div class="card">
+      <div class="st">Use Case × ICP Archetype</div>
+      <table class="matrix">
+        <tr><th>Use Case</th>${[1,2,3,4].map(k=>`<th style="color:${ICP[k].c}">${ICP[k].l}</th>`).join('')}</tr>`;
+  topUCs.forEach(uc=>{
+    const meta=UCM[uc]||UCM[''];
+    html+=`<tr><td style="color:${meta.c};font-size:10px">${uc}</td>`;
+    [1,2,3,4].forEach(k=>{
+      const v=matrix[k]?.[uc]||0;
+      const bg=v>0?meta.c+'33':'transparent';
+      const col=v>0?meta.c:'#374151';
+      html+=`<td><div class="cell" style="background:${bg};color:${col}">${v||'·'}</div></td>`;
+    });
+    html+=`</tr>`;
+  });
+  html+=`</table>
+    </div></div>`;
+
+  html+=`<div class="tg">
+    <div class="card">
+      <div class="st">🤝 Channel / Partner Segment (CON use case)</div>
+      <ul class="tlist">`;
+  C.filter(c=>c.u1==='CON'||c.u2==='CON').sort((a,b)=>b.arr-a.arr).forEach(c=>{
+    html+=`<li>
+      <div class="tl">
+        <div style="width:8px;height:8px;border-radius:50%;background:${hColor(c.h)};flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;font-weight:600">${c.n}</div>
+          <div style="font-size:9px;color:var(--mt)">${c.ind} · ${seats(c.seats)} seats</div>
+        </div>
+      </div>
+      <div class="tn" style="color:#9ca3af">${fmt(c.arr)}</div>
+    </li>`;
+  });
+  html+=`</ul>
+      <div style="margin-top:10px;font-size:10px;color:var(--mt);line-height:1.6">These are <strong style="color:#e6edf3">resellers/integrators</strong> embedding samdesk in their service delivery. 
+      They often have high ARR but low seat counts — meaning they're using the API/data layer, not the UI.<br>
+      This is a distinct <strong style="color:#e6edf3">channel motion</strong> that deserves its own GTM track and pricing model.</div>
+    </div>
+    <div class="card">
+      <div class="st">Recommended: Use Case Entry Points for GTM</div>
+      <div style="font-size:11px;color:var(--mt);line-height:1.8">
+        ${[
+          ['FAM','#3b82f6','Fixed Asset Monitoring','Largest entry point. GSOC wedge product. Every vertical.'],
+          ['TRM','#14b8a6','Travel Risk Management','Financial services, pharma, large enterprise. High seat count.'],
+          ['EP','#ec4899','Executive Protection','Cross-vertical. Often co-occurs with FAM.'],
+          ['IPS','#10b981','INT · Public Safety','Gov/Defense. Distinct buyer — emergency mgmt, law enforcement.'],
+          ['IEG','#6366f1','INT · Economics & Geopolitics','Large enterprise, military. Premium positioning.'],
+          ['CON','#9ca3af','Channel / Reseller','Separate GTM. API/data motion. Partner program candidate.'],
+        ].map(([uc,col,name,desc])=>`
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--bd)">
+            <span style="background:${col}22;color:${col};padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px">${uc}</span>
+            <div><strong style="color:var(--tx)">${name}</strong><br>${desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div></div>`;
+
+  document.getElementById('p2').innerHTML=html;
+}
+
+renderP0();renderP1();renderP2();
+</script>

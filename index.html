@@ -4,13 +4,20 @@
 <meta charset="utf-8">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-:root{--bg:#0d1117;--sf:#161b22;--sf2:#21262d;--bd:#30363d;--tx:#e6edf3;--mt:#7d8590;--c1:#3b82f6;--c2:#ef4444;--c3:#10b981;--c4:#f59e0b}
+:root{--bg:#0d1117;--sf:#161b22;--sf2:#21262d;--bd:#30363d;--tx:#e6edf3;--mt:#7d8590}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding:20px}
 .hdr{text-align:center;margin-bottom:16px}
 .hdr h1{font-size:22px;font-weight:700}.hdr p{color:var(--mt);font-size:12px;margin-top:3px}
 .pill{display:inline-block;background:var(--sf2);border:1px solid var(--bd);padding:4px 12px;border-radius:20px;font-size:10px;color:var(--mt);margin-top:7px;font-style:italic}
-.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:16px;flex-wrap:wrap;gap:2px}
+#drop-zone{border:2px dashed var(--bd);border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:20px;background:var(--sf)}
+#drop-zone.drag{border-color:#3b82f6;background:#3b82f611}
+#drop-zone h2{font-size:16px;font-weight:600;margin-bottom:8px}
+#drop-zone p{color:var(--mt);font-size:12px;margin-bottom:16px}
+#file-input{display:none}
+.upload-btn{display:inline-block;background:#3b82f6;color:#fff;padding:9px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:background .15s}
+.upload-btn:hover{background:#2563eb}
+.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:16px;flex-wrap:wrap}
 .tab{padding:8px 16px;cursor:pointer;font-size:12px;font-weight:500;color:var(--mt);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
 .tab:hover{color:var(--tx)}.tab.on{color:var(--tx);border-bottom-color:var(--tx)}
 .pane{display:none}.pane.on{display:block}
@@ -22,8 +29,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ac{background:var(--sf);border-radius:8px;padding:13px;border-top:3px solid;cursor:pointer;transition:transform .12s}
 .ac:hover{transform:translateY(-2px)}
 .act{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-.ac h3{font-size:12px;font-weight:600;margin:3px 0}
-.acn{font-size:17px;font-weight:700}.acd{font-size:10px;color:var(--mt);line-height:1.5;margin-top:3px}
+.ac h3{font-size:12px;font-weight:600;margin:3px 0}.acn{font-size:17px;font-weight:700}
+.acd{font-size:10px;color:var(--mt);line-height:1.5;margin-top:3px}
 .ach{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
 .hp{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px}
 .frow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
@@ -35,114 +42,135 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mt)}
 .ld{width:7px;height:7px;border-radius:50%}
 .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-bottom:18px}
-.cc{background:var(--sf);border-radius:6px;padding:8px 10px;border-left:3px solid;position:relative}
+.cc{background:var(--sf);border-radius:6px;padding:8px 10px;border-left:3px solid;position:relative;cursor:default}
 .cc:hover{background:var(--sf2)}
 .cn{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:14px}
 .ci{font-size:10px;color:var(--mt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.cbrow{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;align-items:center}
+.cbrow{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}
 .badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;display:inline-block}
 .hdot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
-.card{background:var(--sf);border-radius:8px;padding:14px}
+.card{background:var(--sf);border-radius:8px;padding:14px;margin-bottom:0}
 .irow{display:flex;align-items:center;gap:7px;margin-bottom:5px}
-.il{font-size:10px;color:var(--mt);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.il{font-size:10px;color:var(--mt);width:140px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ibg{flex:1;background:var(--sf2);border-radius:2px;height:14px;overflow:hidden}
 .ibar{height:100%;display:flex;align-items:center;padding-left:4px;font-size:9px;font-weight:700}
 .tlist{list-style:none}
 .tlist li{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);font-size:11px}
 .tlist li:last-child{border:0}
-.tlist .tn{font-weight:600;font-size:11px}
-.tlist .tl{display:flex;align-items:center;gap:6px}
+.tn{font-weight:600;font-size:11px}.tl{display:flex;align-items:center;gap:6px}
 .callout{background:#1a1f2e;border:1px solid #3b82f633;border-left:3px solid #3b82f6;border-radius:6px;padding:12px;margin-bottom:14px;font-size:11px;line-height:1.7;color:#c9d1d9}
 .callout strong{color:var(--tx)}
 .matrix{width:100%;border-collapse:collapse;font-size:10px}
 .matrix th{color:var(--mt);font-size:9px;padding:4px 5px;text-align:center;border-bottom:1px solid var(--bd);font-weight:600}
 .matrix th:first-child{text-align:left}
-.matrix td{padding:3px 5px;text-align:center;border-bottom:1px solid var(--bd)22}
-.matrix td:first-child{text-align:left;font-size:9px}
-.cell{display:inline-block;width:20px;height:20px;border-radius:3px;line-height:20px;text-align:center;font-size:10px;font-weight:700}
-.loading{text-align:center;padding:60px;color:var(--mt);font-size:13px}
-.note{font-size:10px;color:var(--mt);text-align:center;border-top:1px solid var(--bd);padding-top:10px;margin-top:4px}
-@media(max-width:680px){.g2,.g3{grid-template-columns:1fr}}
+.matrix td{padding:3px 5px;text-align:center}
+.matrix td:first-child{text-align:left}
+.cell{display:inline-block;width:22px;height:22px;border-radius:3px;line-height:22px;text-align:center;font-size:10px;font-weight:700}
+.note{font-size:10px;color:var(--mt);text-align:center;border-top:1px solid var(--bd);padding-top:10px;margin-top:8px}
+#dash{display:none}
+@media(max-width:680px){.g2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <div class="hdr">
   <h1>samdesk · ICP Dashboard v3</h1>
-  <p>Live HubSpot Data · Real Employee Counts · Annual Revenue · Geography</p>
+  <p>Real Employee Counts · Annual Revenue · Geography · Use Cases</p>
   <div class="pill">"Organizations where real-world disruption impacts operations in real time"</div>
 </div>
 
-<div class="tabs">
-  <div class="tab on" onclick="T(0)">🏢 Companies</div>
-  <div class="tab" onclick="T(1)">💰 Revenue & Risk</div>
-  <div class="tab" onclick="T(2)">🎯 Use Cases</div>
-  <div class="tab" onclick="T(3)">🌎 Geography</div>
-  <div class="tab" onclick="T(4)">📐 Size Analysis</div>
+<div id="drop-zone">
+  <h2>📂 Drop your HubSpot CSV export here</h2>
+  <p>Or click to browse — the file stays local, nothing is uploaded anywhere</p>
+  <label class="upload-btn" for="file-input">Choose CSV file</label>
+  <input type="file" id="file-input" accept=".csv">
 </div>
 
-<div class="pane on" id="p0"><div class="loading">Loading data…</div></div>
-<div class="pane" id="p1"><div class="loading">Loading data…</div></div>
-<div class="pane" id="p2"><div class="loading">Loading data…</div></div>
-<div class="pane" id="p3"><div class="loading">Loading data…</div></div>
-<div class="pane" id="p4"><div class="loading">Loading data…</div></div>
+<div id="dash">
+  <div class="tabs">
+    <div class="tab on" onclick="T(0)">🏢 Companies</div>
+    <div class="tab" onclick="T(1)">💰 Revenue & Risk</div>
+    <div class="tab" onclick="T(2)">🎯 Use Cases</div>
+    <div class="tab" onclick="T(3)">🌎 Geography</div>
+    <div class="tab" onclick="T(4)">📐 Size Analysis</div>
+  </div>
+  <div class="pane on" id="p0"></div>
+  <div class="pane" id="p1"></div>
+  <div class="pane" id="p2"></div>
+  <div class="pane" id="p3"></div>
+  <div class="pane" id="p4"></div>
+</div>
 
 <script>
-const ICP={1:{l:"ICP 1",n:"Operationally Distributed",c:"#3b82f6"},2:{l:"ICP 2",n:"Corporate Security/GSOC",c:"#ef4444"},3:{l:"ICP 3",n:"Government & Defense",c:"#10b981"},4:{l:"ICP 4",n:"High-Risk/High-Reg",c:"#f59e0b"}};
-const ICPD={1:"Logistics, transport & mobility with constant asset movement and real-time disruption exposure.",2:"Enterprises with security ops needing to connect fragmented signals to business impact.",3:"Public sector needing verified situational awareness across regions and agencies.",4:"Energy, finance & pharma with duty of care, compliance, and operational risk exposure."};
-const UCM={"GSOC - Fixed Asset Monitori...":{s:"FAM",c:"#3b82f6"},"GSOC - Personnel Safety Fix...":{s:"PSF",c:"#8b5cf6"},"GSOC - Personnel Safety Mo...":{s:"PSM",c:"#a78bfa"},"GSOC - Supply Chain Monito...":{s:"SCM",c:"#06b6d4"},"GSOC - Crime and Threat Man...":{s:"CTM",c:"#f97316"},"EP - Executive Protection":{s:"EP",c:"#ec4899"},"TRM - Travelling Employees":{s:"TRM",c:"#14b8a6"},"INT - Public Safety":{s:"IPS",c:"#10b981"},"INT - Crime and Threat Man...":{s:"ICT",c:"#f59e0b"},"INT - Economics and Geopol...":{s:"IEG",c:"#6366f1"},"INT - National Security":{s:"INS",c:"#ef4444"},"OTH - Consulting":{s:"CON",c:"#9ca3af"},"OTH - Research":{s:"RES",c:"#6b7280"},"OTH - Media":{s:"MED",c:"#d97706"},"PR - Brand Safety":{s:"BRS",c:"#7c3aed"}};
-
-// ICP assignment by industry
+const ICP={1:{l:"ICP 1",n:"Operationally Distributed",c:"#3b82f6",d:"Logistics, transport & mobility with constant asset movement and disruption exposure."},2:{l:"ICP 2",n:"Corporate Security/GSOC",c:"#ef4444",d:"Enterprises with security ops needing to connect fragmented signals to business impact."},3:{l:"ICP 3",n:"Government & Defense",c:"#10b981",d:"Public sector needing verified situational awareness across regions and agencies."},4:{l:"ICP 4",n:"High-Risk/High-Reg",c:"#f59e0b",d:"Energy, finance & pharma with duty of care, compliance and operational risk."}};
 const IND_ICP={"Airlines/Aviation":1,"Transportation/Trucking/Railroad":1,"Logistics and Supply Chain":1,"Automotive":1,"Hospitality":1,"Leisure, Travel & Tourism":1,"Mechanical or Industrial Engineering":1,"Security and Investigations":2,"Computer Software":2,"Computer Games":2,"Retail":2,"Apparel & Fashion":2,"Consumer Goods":2,"Consumer Services":2,"Semiconductors":2,"Telecommunications":2,"Information Technology and Services":2,"Luxury Goods & Jewelry":2,"Construction":2,"Real Estate":2,"Commercial Real Estate":2,"News":2,"Professional Training & Coaching":2,"Information Services":2,"Internet":2,"Gambling & Casinos":2,"Government Administration":3,"Military":3,"Defense & Space":3,"Higher Education":3,"Primary/Secondary Education":3,"Non-Profit Organization Management":3,"International Trade and Development":3,"Financial Services":4,"Insurance":4,"Pharmaceuticals":4,"Oil & Energy":4,"Investment Management":4,"Legal Services":4,"Chemicals":4,"Mining & Metals":4};
 
 function getICP(ind){return IND_ICP[ind]||2}
-function ucShort(u){return UCM[u]?UCM[u].s:(u?u.substring(0,6):'—')}
-function ucColor(u){return UCM[u]?UCM[u].c:'#374151'}
 function icpC(i){return ICP[i]?ICP[i].c:'#555'}
 function hColor(h){return h==='G'?'#22c55e':h==='Y'?'#f59e0b':h==='R'?'#ef4444':'#374151'}
-function fmt(n){if(!n)return'$0';return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'k':'$'+n}
+function fmt(n){if(!n||isNaN(n))return'$0';return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'k':'$'+Math.round(n)}
 function szTier(emp){
-  if(!emp||isNaN(emp))return{t:'Unknown',c:'#374151',s:'No data'};
-  if(emp>=10000)return{t:'Enterprise',c:'#c084fc',s:'>10k employees'};
-  if(emp>=1000)return{t:'Large',c:'#60a5fa',s:'1k–10k employees'};
-  if(emp>=100)return{t:'Mid-Market',c:'#4ade80',s:'100–1k employees'};
-  return{t:'SMB/Startup',c:'#9ca3af',s:'<100 employees'};
+  if(!emp||isNaN(emp)||emp<=0)return{t:'Unknown',c:'#374151'};
+  if(emp>=10000)return{t:'Enterprise',c:'#c084fc'};
+  if(emp>=1000)return{t:'Large',c:'#60a5fa'};
+  if(emp>=100)return{t:'Mid-Market',c:'#4ade80'};
+  return{t:'SMB/Startup',c:'#9ca3af'};
+}
+function ucShort(u){
+  if(!u)return'';
+  const m={"GSOC - Fixed Asset Monitori...":"FAM","GSOC - Personnel Safety Fix...":"PSF","GSOC - Personnel Safety Mo...":"PSM","GSOC - Supply Chain Monito...":"SCM","GSOC - Crime and Threat Man...":"CTM","EP - Executive Protection":"EP","TRM - Travelling Employees":"TRM","INT - Public Safety":"IPS","INT - Crime and Threat Man...":"ICT","INT - Economics and Geopol...":"IEG","INT - National Security":"INS","OTH - Consulting":"CON","OTH - Research":"RES","OTH - Media":"MED","PR - Brand Safety":"BRS"};
+  return m[u]||u.substring(0,5);
+}
+function ucColor(u){
+  const m={"GSOC - Fixed Asset Monitori...":"#3b82f6","GSOC - Personnel Safety Fix...":"#8b5cf6","GSOC - Personnel Safety Mo...":"#a78bfa","GSOC - Supply Chain Monito...":"#06b6d4","GSOC - Crime and Threat Man...":"#f97316","EP - Executive Protection":"#ec4899","TRM - Travelling Employees":"#14b8a6","INT - Public Safety":"#10b981","INT - Crime and Threat Man...":"#f59e0b","INT - Economics and Geopol...":"#6366f1","INT - National Security":"#ef4444","OTH - Consulting":"#9ca3af","OTH - Research":"#6b7280","OTH - Media":"#d97706","PR - Brand Safety":"#7c3aed"};
+  return m[u]||'#555';
 }
 
 let DATA=[],filt='all',hfilt='all';
 
-function T(i){
-  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j===i));
-  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',j===i));
-  if(i===0)renderP0();
-  if(i===1)renderP1();
-  if(i===2)renderP2();
-  if(i===3)renderP3();
-  if(i===4)renderP4();
+// File handling
+const dz=document.getElementById('drop-zone');
+const fi=document.getElementById('file-input');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0])});
+fi.addEventListener('change',e=>{if(e.target.files[0])processFile(e.target.files[0])});
+dz.addEventListener('click',e=>{if(e.target!==fi&&!e.target.classList.contains('upload-btn'))fi.click()});
+
+function processFile(file){
+  Papa.parse(file,{
+    header:true,skipEmptyLines:true,dynamicTyping:false,
+    complete(res){
+      DATA=parseData(res.data);
+      if(DATA.length===0){alert('No data rows found — check the CSV format.');return;}
+      document.getElementById('drop-zone').style.display='none';
+      document.getElementById('dash').style.display='block';
+      renderP0();renderP1();renderP2();renderP3();renderP4();
+    },
+    error(e){alert('Parse error: '+e.message);}
+  });
 }
 
 function parseData(rows){
-  return rows.filter(r=>r['Company name']).map(r=>{
+  return rows.filter(r=>r['Company name']&&r['Company name'].trim()).map(r=>{
     const ind=(r['Industry']||'').trim();
-    const icp=getICP(ind);
-    const arr=parseFloat(r['Contract Amount'])||0;
-    const emp=parseFloat(r['Number of Employees'])||null;
-    const annRev=parseFloat(r['Annual Revenue'])||null;
     const h=(r['Customer Health']||'').trim();
-    const u1=(r['Main Use Case']||'').trim();
-    const u2=(r['Secondary Use Case']||'').trim();
-    const seg=(r['Segment']||'').trim();
-    return {
+    const emp=parseFloat((r['Number of Employees']||'').replace(/,/g,''))||null;
+    const annRev=parseFloat((r['Annual Revenue']||'').replace(/[$,]/g,''))||null;
+    return{
       n:(r['Company name']||'').trim(),
-      ind,icp,arr,emp,annRev,
+      ind,icp:getICP(ind),
+      arr:parseFloat((r['Contract Amount']||'').replace(/[$,]/g,''))||0,
+      emp,annRev,
       h:h==='G'?'G':h==='Y'?'Y':h==='R'?'R':'',
-      u1,u2,seg,
+      u1:(r['Main Use Case']||'').trim(),
+      u2:(r['Secondary Use Case']||'').trim(),
+      seg:(r['Segment']||'').trim(),
       country:(r['Country/Region']||'').trim(),
       state:(r['State/Region']||'').trim(),
       seats:(r['Seat Limit']||'').trim(),
-      csm:(r['Customer Success Manager']||'').trim(),
+      features:(r['Enabled Features']||'').trim(),
     };
   });
 }
@@ -155,174 +183,154 @@ function filtered(){
   });
 }
 
-function renderStats(el){
-  const cnt={},tot=DATA.length;
-  DATA.forEach(c=>cnt[c.icp]=(cnt[c.icp]||0)+1);
-  const hcnt={G:0,Y:0,R:0,'':0};
-  DATA.forEach(c=>hcnt[c.h]=(hcnt[c.h]||0)+1);
-  el.innerHTML=`<div class="stats">
-    <div class="sc" style="border-color:#555"><div class="n">${tot}</div><div class="l">Customers</div></div>
-    ${[1,2,3,4].map(k=>`<div class="sc" style="border-color:${icpC(k)}"><div class="n" style="color:${icpC(k)}">${cnt[k]||0}</div><div class="l">${ICP[k].l}</div></div>`).join('')}
-    <div class="sc" style="border-color:#22c55e"><div class="n" style="color:#22c55e">${hcnt.G}</div><div class="l">Healthy</div></div>
-    <div class="sc" style="border-color:#f59e0b"><div class="n" style="color:#f59e0b">${hcnt.Y}</div><div class="l">Yellow</div></div>
-    <div class="sc" style="border-color:#ef4444"><div class="n" style="color:#ef4444">${hcnt.R}</div><div class="l">Red</div></div>
-    <div class="sc" style="border-color:#555"><div class="n">${fmt(DATA.reduce((a,c)=>a+c.arr,0))}</div><div class="l">Total ARR</div></div>
-  </div>`;
+function T(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j===i));
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',j===i));
+}
+
+function setFilt(f){filt=f;renderFilterBtns();renderCGrid()}
+function setHFilt(h){hfilt=h;renderFilterBtns();renderCGrid()}
+
+function renderFilterBtns(){
+  const el=document.getElementById('fbs');if(!el)return;
+  const btns=[
+    {f:'all',h:'all',l:'All'},{f:'1',h:'all',l:'ICP 1',c:ICP[1].c},{f:'2',h:'all',l:'ICP 2',c:ICP[2].c},{f:'3',h:'all',l:'ICP 3',c:ICP[3].c},{f:'4',h:'all',l:'ICP 4',c:ICP[4].c},{f:'CON',h:'all',l:'🤝 Partners',c:'#9ca3af'},
+    null,
+    {f:'all',h:'all',l:'All Health'},{f:'all',h:'G',l:'🟢 Healthy',c:'#22c55e'},{f:'all',h:'Y',l:'🟡 Yellow',c:'#f59e0b'},{f:'all',h:'R',l:'🔴 Red',c:'#ef4444'},
+  ];
+  el.innerHTML=btns.map(b=>{
+    if(!b)return`<div class="sep"></div>`;
+    const isH=b.h!=='all';
+    const on=isH?(hfilt===b.h):(filt===b.f&&(b.f!=='all'||hfilt==='all'));
+    const col=b.c||'#555';
+    return`<button class="fb${on?' on':''}" style="${on?`background:${col};border-color:${col}`:''}" onclick="${isH?`setHFilt('${b.h}')`:`setFilt('${b.f}')`}">${b.l}</button>`;
+  }).join('');
 }
 
 function renderP0(){
-  const cnt={};
-  DATA.forEach(c=>cnt[c.icp]=(cnt[c.icp]||0)+1);
-  let html='';
-  const statsDiv=document.createElement('div');renderStats(statsDiv);html+=statsDiv.innerHTML;
+  const tot=DATA.reduce((a,c)=>a+c.arr,0);
+  const hcnt={G:0,Y:0,R:0,'':0};DATA.forEach(c=>hcnt[c.h]=(hcnt[c.h]||0)+1);
+  const cnt={};[1,2,3,4].forEach(k=>cnt[k]=DATA.filter(c=>c.icp===k).length);
 
-  html+=`<div class="st" style="margin-bottom:10px">ICP Archetypes</div><div class="ag">`;
+  let html=`<div class="stats">
+    <div class="sc" style="border-color:#555"><div class="n">${DATA.length}</div><div class="l">Customers</div></div>
+    ${[1,2,3,4].map(k=>`<div class="sc" style="border-color:${icpC(k)}"><div class="n" style="color:${icpC(k)}">${cnt[k]}</div><div class="l">${ICP[k].l}</div></div>`).join('')}
+    <div class="sc" style="border-color:#22c55e"><div class="n" style="color:#22c55e">${hcnt.G}</div><div class="l">Healthy</div></div>
+    <div class="sc" style="border-color:#f59e0b"><div class="n" style="color:#f59e0b">${hcnt.Y}</div><div class="l">Yellow</div></div>
+    <div class="sc" style="border-color:#ef4444"><div class="n" style="color:#ef4444">${hcnt.R}</div><div class="l">Red</div></div>
+    <div class="sc" style="border-color:#555"><div class="n">${fmt(tot)}</div><div class="l">Total ARR</div></div>
+  </div>
+  <div class="st">ICP Archetypes — click to filter</div><div class="ag">`;
+
   [1,2,3,4].forEach(k=>{
     const kc=DATA.filter(c=>c.icp===k);
     const kg=kc.filter(c=>c.h==='G').length,ky=kc.filter(c=>c.h==='Y').length,kr=kc.filter(c=>c.h==='R').length;
-    const karr=kc.reduce((a,c)=>a+c.arr,0);
     html+=`<div class="ac" style="border-color:${icpC(k)}" onclick="setFilt('${k}')">
       <div class="act" style="color:${icpC(k)}">${ICP[k].l}</div>
       <h3>${ICP[k].n}</h3>
-      <div class="acn" style="color:${icpC(k)}">${kc.length} <span style="font-size:11px;font-weight:400;color:var(--mt)">cos · ${fmt(karr)}</span></div>
-      <div class="acd">${ICPD[k]}</div>
+      <div class="acn" style="color:${icpC(k)}">${kc.length} <span style="font-size:11px;font-weight:400;color:var(--mt)">cos · ${fmt(kc.reduce((a,c)=>a+c.arr,0))}</span></div>
+      <div class="acd">${ICP[k].d}</div>
       <div class="ach">
         <span class="hp" style="background:#22c55e22;color:#22c55e">G:${kg}</span>
         <span class="hp" style="background:#f59e0b22;color:#f59e0b">Y:${ky}</span>
         <span class="hp" style="background:#ef444422;color:#ef4444">R:${kr}</span>
-      </div>
-    </div>`;
+      </div></div>`;
   });
-  html+=`</div><div class="frow" id="fbs0"></div>
-  <div class="ghdr"><div class="st" id="gh0" style="margin:0"></div>
+  html+=`</div><div class="frow" id="fbs"></div>
+  <div class="ghdr"><div class="st" id="gh" style="margin:0"></div>
     <div class="leg">
       <div class="li"><div class="ld" style="background:#22c55e"></div>Healthy</div>
       <div class="li"><div class="ld" style="background:#f59e0b"></div>Yellow</div>
       <div class="li"><div class="ld" style="background:#ef4444"></div>Red</div>
       <div class="li"><div class="ld" style="background:#374151"></div>Unknown</div>
-    </div>
-  </div>
-  <div class="cg" id="cg0"></div>
-  <div class="note">Left border = ICP archetype color. Dot = customer health. Badge shows size tier, contract ARR, primary use case.</div>`;
+    </div></div>
+  <div class="cg" id="cg"></div>
+  <div class="note">Border = ICP archetype · Dot = health · Badges show real size tier from employee count, ARR, primary use case</div>`;
   document.getElementById('p0').innerHTML=html;
-  renderFilterBtns('fbs0',0);renderCGrid();
+  renderFilterBtns();renderCGrid();
 }
-
-function renderFilterBtns(id,pane){
-  const btns=[
-    {f:'all',l:'All',h:'all'},{f:'1',l:'ICP 1',h:'all'},{f:'2',l:'ICP 2',h:'all'},{f:'3',l:'ICP 3',h:'all'},{f:'4',l:'ICP 4',h:'all'},{f:'CON',l:'🤝 Partners',h:'all'},
-    null,
-    {f:'all',l:'All Health',h:'all'},{f:'all',l:'🟢 Healthy',h:'G'},{f:'all',l:'🟡 Yellow',h:'Y'},{f:'all',l:'🔴 Red',h:'R'},
-  ];
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.innerHTML=btns.map(b=>{
-    if(!b)return`<div class="sep"></div>`;
-    const isI=b.h==='all'&&b.f!=='all';
-    const isA=b.f==='all'&&b.h==='all';
-    const isH=b.h!=='all';
-    const on=isA?(filt==='all'&&hfilt==='all'):isH?(hfilt===b.h):isI?(filt===b.f):false;
-    const col=b.f==='1'?ICP[1].c:b.f==='2'?ICP[2].c:b.f==='3'?ICP[3].c:b.f==='4'?ICP[4].c:b.h==='G'?'#22c55e':b.h==='Y'?'#f59e0b':b.h==='R'?'#ef4444':'#555';
-    return`<button class="fb ${on?'on':''}" style="${on?`background:${col};border-color:${col}`:''}" onclick="${isH?`setHFilt('${b.h}')`:`setFilt('${b.f}')`}">${b.l}</button>`;
-  }).join('');
-}
-
-function setFilt(f){filt=f;renderFilterBtns('fbs0',0);renderCGrid()}
-function setHFilt(h){hfilt=h;renderFilterBtns('fbs0',0);renderCGrid()}
 
 function renderCGrid(){
   const f=filtered();
-  const gh=document.getElementById('gh0'),cg=document.getElementById('cg0');
+  const gh=document.getElementById('gh'),cg=document.getElementById('cg');
   if(!gh||!cg)return;
   const lbl=filt==='all'?'All Companies':filt==='CON'?'Partners/Resellers':ICP[parseInt(filt)]?.n||'Filtered';
-  const hl=hfilt==='all'?'':(` · ${hfilt==='G'?'Healthy':hfilt==='Y'?'Yellow':'Red'}`);
-  gh.textContent=`${lbl}${hl} (${f.length})`;
+  gh.textContent=`${lbl}${hfilt!=='all'?` · ${hfilt==='G'?'Healthy':hfilt==='Y'?'Yellow':'Red'}`:''} (${f.length})`;
   cg.innerHTML=f.map(c=>{
     const sz=szTier(c.emp);
-    return`<div class="cc" style="border-color:${icpC(c.icp)}" title="${c.n} | ${c.ind} | ${sz.t} (${c.emp?c.emp.toLocaleString()+' emp':'no data'}) | ${fmt(c.arr)} | ${c.u1||'—'} | ${c.country}">
-      <div class="hdot" style="background:${hColor(c.h)}${c.h?'':'66'}"></div>
-      <div class="cn">${c.n}</div>
-      <div class="ci">${c.ind}</div>
+    return`<div class="cc" style="border-color:${icpC(c.icp)}" title="${c.n} | ${c.ind} | ${c.emp?c.emp.toLocaleString()+' employees':sz.t} | ${fmt(c.arr)} | ${c.u1||'—'} | ${c.country}">
+      <div class="hdot" style="background:${hColor(c.h)}${c.h?'':'55'}"></div>
+      <div class="cn">${c.n}</div><div class="ci">${c.ind}</div>
       <div class="cbrow">
         <span class="badge" style="color:${sz.c};background:${sz.c}22">${sz.t}</span>
-        ${c.arr>0?`<span class="badge" style="color:#e6edf3;background:#fff1">${fmt(c.arr)}</span>`:`<span class="badge" style="color:#f59e0b;background:#f59e0b11">$0</span>`}
+        ${c.arr>0?`<span class="badge" style="color:#e6edf388;background:#fff1">${fmt(c.arr)}</span>`:`<span class="badge" style="color:#f59e0b;background:#f59e0b11">$0</span>`}
         ${c.u1?`<span class="badge" style="color:${ucColor(c.u1)};background:${ucColor(c.u1)}22">${ucShort(c.u1)}</span>`:''}
-      </div>
-    </div>`;
+      </div></div>`;
   }).join('');
 }
 
 function renderP1(){
   const tot=DATA.reduce((a,c)=>a+c.arr,0);
-  const byH={G:0,Y:0,R:0,'':0};
-  DATA.forEach(c=>byH[c.h]=(byH[c.h]||0)+c.arr);
-  const byICP={};[1,2,3,4].forEach(k=>{byICP[k]=DATA.filter(c=>c.icp===k).reduce((a,c)=>a+c.arr,0)});
+  const byH={G:0,Y:0,R:0,'':0};DATA.forEach(c=>byH[c.h]=(byH[c.h]||0)+c.arr);
+  const byICP={};[1,2,3,4].forEach(k=>byICP[k]=DATA.filter(c=>c.icp===k).reduce((a,c)=>a+c.arr,0));
   const top=[...DATA].sort((a,b)=>b.arr-a.arr).slice(0,12);
   const red=DATA.filter(c=>c.h==='R').sort((a,b)=>b.arr-a.arr);
-  const yel=DATA.filter(c=>c.h==='Y').sort((a,b)=>b.arr-a.arr);
+  const zero=DATA.filter(c=>c.arr===0);
+  const segs={};DATA.forEach(c=>{if(c.seg){if(!segs[c.seg])segs[c.seg]={count:0,arr:0};segs[c.seg].count++;segs[c.seg].arr+=c.arr;}});
+  const segKeys=Object.keys(segs).filter(s=>s).sort((a,b)=>segs[b].arr-segs[a].arr);
+  const maxICP=Math.max(...Object.values(byICP));
+  const maxSeg=segKeys.length?Math.max(...segKeys.map(s=>segs[s].arr)):1;
 
   let html=`<div class="stats">
     <div class="sc" style="border-color:#555"><div class="n">${fmt(tot)}</div><div class="l">Total ARR</div></div>
     <div class="sc" style="border-color:#22c55e"><div class="n" style="color:#22c55e">${fmt(byH.G)}</div><div class="l">Healthy ARR</div></div>
     <div class="sc" style="border-color:#f59e0b"><div class="n" style="color:#f59e0b">${fmt(byH.Y)}</div><div class="l">Yellow ARR</div></div>
     <div class="sc" style="border-color:#ef4444"><div class="n" style="color:#ef4444">${fmt(byH.R)}</div><div class="l">Red ARR</div></div>
-    <div class="sc" style="border-color:#555"><div class="n">${Math.round(byH.R/tot*100)}%</div><div class="l">At-Risk %</div></div>
-  </div>`;
-
-  const maxICP=Math.max(...Object.values(byICP));
-  html+=`<div class="g2">
+    <div class="sc" style="border-color:#555"><div class="n">${tot>0?Math.round((byH.R+byH.Y)/tot*100):0}%</div><div class="l">At-Risk %</div></div>
+  </div>
+  <div class="g2">
     <div class="card"><div class="st">ARR by ICP Archetype</div>`;
   [1,2,3,4].forEach(k=>{
-    const pct=(byICP[k]/maxICP*100).toFixed(0);
-    html+=`<div class="irow"><div class="il" style="color:${icpC(k)}">${ICP[k].l}: ${ICP[k].n}</div>
-      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${icpC(k)}33;border-left:3px solid ${icpC(k)}">
-        <span style="color:${icpC(k)}">${fmt(byICP[k])}</span></div></div></div>`;
+    const pct=maxICP>0?(byICP[k]/maxICP*100).toFixed(0):0;
+    html+=`<div class="irow"><div class="il" style="color:${icpC(k)}">${ICP[k].l}</div>
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${icpC(k)}33;border-left:3px solid ${icpC(k)}"><span style="color:${icpC(k)}">${fmt(byICP[k])}</span></div></div></div>`;
   });
-  html+=`</div><div class="card"><div class="st">Health Distribution by ARR</div>`;
+  html+=`</div><div class="card"><div class="st">Health by ARR</div>`;
   [['G','Healthy','#22c55e'],['Y','Yellow','#f59e0b'],['R','Red','#ef4444'],['','Unknown','#374151']].forEach(([h,l,col])=>{
     const v=byH[h],pct=tot>0?(v/tot*100).toFixed(0):0;
     html+=`<div class="irow"><div class="il" style="color:${col}">${l}</div>
-      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}">
-        <span style="color:${col}">${fmt(v)} (${pct}%)</span></div></div></div>`;
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}"><span style="color:${col}">${fmt(v)} (${pct}%)</span></div></div></div>`;
   });
-  html+=`</div></div>`;
-
-  html+=`<div class="g2">
-    <div class="card"><div class="st">Top 12 Accounts by ARR</div><ul class="tlist">`;
+  html+=`</div></div>
+  <div class="g2">
+    <div class="card"><div class="st">Top 12 by ARR</div><ul class="tlist">`;
   top.forEach(c=>{
     html+=`<li><div class="tl"><div style="width:7px;height:7px;border-radius:50%;background:${hColor(c.h)};flex-shrink:0"></div>
       <div><div style="font-size:11px;font-weight:600">${c.n}</div>
-      <div style="font-size:9px;color:var(--mt)">${ICP[c.icp].l} · ${ucShort(c.u1)}</div></div></div>
+      <div style="font-size:9px;color:var(--mt)">${ICP[c.icp].l} · ${ucShort(c.u1)||'—'}</div></div></div>
       <div class="tn" style="color:${icpC(c.icp)}">${fmt(c.arr)}</div></li>`;
   });
-  html+=`</ul></div><div class="card"><div class="st">🔴 Red Accounts (${fmt(byH.R)} at risk)</div><ul class="tlist">`;
-  if(red.length===0){html+=`<li style="color:var(--mt)">No red accounts!</li>`;}
+  html+=`</ul></div><div class="card"><div class="st">🔴 Red Accounts</div><ul class="tlist">`;
+  if(!red.length)html+=`<li style="color:var(--mt);font-size:11px">No red accounts!</li>`;
   else red.forEach(c=>{
     html+=`<li><div class="tl"><div><div style="font-size:11px;font-weight:600">${c.n}</div>
-      <div style="font-size:9px;color:var(--mt)">${c.ind} · ${ucShort(c.u1)}</div></div></div>
+      <div style="font-size:9px;color:var(--mt)">${c.ind} · ${ucShort(c.u1)||'—'}</div></div></div>
       <div class="tn" style="color:#ef4444">${fmt(c.arr)}</div></li>`;
   });
   html+=`</ul></div></div>`;
 
-  // Segment analysis if available
-  const segs={};DATA.forEach(c=>{if(c.seg)segs[c.seg]=(segs[c.seg]||{count:0,arr:0})});
-  DATA.forEach(c=>{if(c.seg){segs[c.seg].count++;segs[c.seg].arr+=c.arr}});
-  const segKeys=Object.keys(segs).filter(s=>s);
-  if(segKeys.length>0){
-    const maxSeg=Math.max(...segKeys.map(s=>segs[s].arr));
-    html+=`<div class="card" style="margin-bottom:14px"><div class="st">ARR by HubSpot Segment</div>`;
-    segKeys.sort((a,b)=>segs[b].arr-segs[a].arr).forEach(s=>{
-      const pct=(segs[s].arr/maxSeg*100).toFixed(0);
+  if(segKeys.length){
+    html+=`<div class="card" style="margin-bottom:12px"><div class="st">ARR by HubSpot Segment</div>`;
+    segKeys.forEach(s=>{
+      const pct=maxSeg>0?(segs[s].arr/maxSeg*100).toFixed(0):0;
       html+=`<div class="irow"><div class="il">${s} (${segs[s].count})</div>
-        <div class="ibg"><div class="ibar" style="width:${pct}%;background:#3b82f633;border-left:3px solid #3b82f6">
-          <span style="color:#60a5fa">${fmt(segs[s].arr)}</span></div></div></div>`;
+        <div class="ibg"><div class="ibar" style="width:${pct}%;background:#3b82f633;border-left:3px solid #3b82f6"><span style="color:#60a5fa">${fmt(segs[s].arr)}</span></div></div></div>`;
     });
     html+=`</div>`;
   }
-
-  const zero=DATA.filter(c=>c.arr===0);
-  if(zero.length>0){
-    html+=`<div class="card" style="margin-bottom:14px"><div class="st">$0 ARR Accounts (${zero.length}) — Pilots / Partnerships</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">`;
+  if(zero.length){
+    html+=`<div class="card"><div class="st">$0 ARR — Pilots / Partnerships (${zero.length})</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">`;
     zero.forEach(c=>{html+=`<span style="background:${icpC(c.icp)}22;border:1px solid ${icpC(c.icp)}44;color:${icpC(c.icp)};padding:3px 9px;border-radius:4px;font-size:11px;font-weight:600">${c.n}</span>`;});
     html+=`</div></div>`;
   }
@@ -331,52 +339,40 @@ function renderP1(){
 
 function renderP2(){
   const ucCount={},ucArr={};
-  DATA.forEach(c=>{
-    [c.u1,c.u2].forEach(u=>{
-      if(!u)return;
-      ucCount[u]=(ucCount[u]||0)+1;
-      ucArr[u]=(ucArr[u]||0)+c.arr;
-    });
-  });
+  DATA.forEach(c=>{[c.u1,c.u2].forEach(u=>{if(!u)return;ucCount[u]=(ucCount[u]||0)+1;ucArr[u]=(ucArr[u]||0)+c.arr;})});
   const sorted=Object.entries(ucCount).sort((a,b)=>b[1]-a[1]);
   const maxC=sorted[0]?sorted[0][1]:1;
   const matrix={};
-  DATA.forEach(c=>{
-    if(!matrix[c.icp])matrix[c.icp]={};
-    [c.u1,c.u2].forEach(u=>{if(u)matrix[c.icp][u]=(matrix[c.icp][u]||0)+1});
-  });
+  DATA.forEach(c=>{if(!matrix[c.icp])matrix[c.icp]={};[c.u1,c.u2].forEach(u=>{if(u)matrix[c.icp][u]=(matrix[c.icp][u]||0)+1;})});
   const partners=DATA.filter(c=>c.u1.includes('OTH')||c.u2.includes('OTH'));
-  const partnerARR=partners.reduce((a,c)=>a+c.arr,0);
 
   let html=`<div class="callout">
-    <strong>Use case is your real segmentation axis.</strong> GSOC-FAM is the dominant entry point.
-    The <strong>OTH (Consulting/Reseller)</strong> cluster represents ~${fmt(partnerARR)} ARR across ${partners.length} accounts — a distinct channel motion with different product usage patterns.
+    <strong>Use case is your real segmentation axis.</strong> GSOC-FAM is the dominant product entry point.
+    The <strong>OTH (Consulting/Reseller)</strong> cluster — ${partners.length} accounts, ${fmt(partners.reduce((a,c)=>a+c.arr,0))} ARR — operates differently: low seat counts, data/API usage. A separate channel GTM motion.
   </div>
   <div class="g2">
-    <div class="card"><div class="st">Use Case Frequency</div>`;
+    <div class="card"><div class="st">Use Case Frequency (primary + secondary)</div>`;
   sorted.forEach(([uc,n])=>{
-    const col=ucColor(uc),sh=ucShort(uc),pct=(n/maxC*100).toFixed(0);
-    html+=`<div class="irow"><div class="il" style="color:${col}">${sh} — ${uc.substring(0,25)}</div>
-      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}44;border-left:3px solid ${col}">
-        <span style="color:${col}">${n}</span></div></div></div>`;
+    const col=ucColor(uc),pct=(n/maxC*100).toFixed(0);
+    html+=`<div class="irow"><div class="il" style="color:${col}">${ucShort(uc)} — ${uc.substring(0,22)}</div>
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}44;border-left:3px solid ${col}"><span style="color:${col}">${n}</span></div></div></div>`;
   });
   html+=`</div><div class="card"><div class="st">Use Case × ICP Matrix</div>
-    <table class="matrix"><tr><th>Use Case</th>${[1,2,3,4].map(k=>`<th style="color:${icpC(k)}">${ICP[k].l}</th>`).join('')}</tr>`;
+    <table class="matrix"><tr><th>UC</th>${[1,2,3,4].map(k=>`<th style="color:${icpC(k)}">${ICP[k].l}</th>`).join('')}</tr>`;
   sorted.slice(0,12).forEach(([uc])=>{
-    html+=`<tr><td style="color:${ucColor(uc)}">${ucShort(uc)}</td>`;
+    html+=`<tr><td style="color:${ucColor(uc)};font-size:9px">${ucShort(uc)}</td>`;
     [1,2,3,4].forEach(k=>{
       const v=matrix[k]?.[uc]||0;
-      html+=`<td><div class="cell" style="background:${v>0?ucColor(uc)+'33':'transparent'};color:${v>0?ucColor(uc):'#374151'}">${v||'·'}</div></td>`;
+      html+=`<td><div class="cell" style="background:${v?ucColor(uc)+'33':'transparent'};color:${v?ucColor(uc):'#374151'}">${v||'·'}</div></td>`;
     });
     html+=`</tr>`;
   });
-  html+=`</table></div></div>`;
-
-  html+=`<div class="card" style="margin-bottom:14px"><div class="st">🤝 Partner / Consulting Accounts</div><ul class="tlist">`;
+  html+=`</table></div></div>
+  <div class="card"><div class="st">🤝 Partner / Consulting Accounts</div><ul class="tlist">`;
   partners.sort((a,b)=>b.arr-a.arr).forEach(c=>{
     html+=`<li><div class="tl"><div style="width:7px;height:7px;border-radius:50%;background:${hColor(c.h)};flex-shrink:0"></div>
       <div><div style="font-size:11px;font-weight:600">${c.n}</div>
-      <div style="font-size:9px;color:var(--mt)">${c.ind} · ${c.seats} seats · ${c.country}</div></div></div>
+      <div style="font-size:9px;color:var(--mt)">${c.ind} · ${c.seats||'—'} seats · ${c.country}</div></div></div>
       <div class="tn" style="color:#9ca3af">${fmt(c.arr)}</div></li>`;
   });
   html+=`</ul></div>`;
@@ -384,168 +380,112 @@ function renderP2(){
 }
 
 function renderP3(){
-  const byCo={},byCoARR={};
+  const byCo={},byCoARR={},icpByCo={};
   DATA.forEach(c=>{
     const co=c.country||'Unknown';
-    byCo[co]=(byCo[co]||0)+1;
-    byCoARR[co]=(byCoARR[co]||0)+c.arr;
-  });
-  const coSorted=Object.entries(byCo).sort((a,b)=>b[1]-a[1]);
-  const maxCo=coSorted[0]?coSorted[0][1]:1;
-
-  const bySt={},byStARR={};
-  DATA.filter(c=>c.country==='United States').forEach(c=>{
-    const st=c.state||'Unknown';
-    bySt[st]=(bySt[st]||0)+1;
-    byStARR[st]=(byStARR[st]||0)+c.arr;
-  });
-  const stSorted=Object.entries(bySt).sort((a,b)=>b[1]-a[1]).slice(0,10);
-
-  const intl=DATA.filter(c=>c.country&&c.country!=='United States'&&c.country!=='');
-  const icpByCo={};DATA.forEach(c=>{
-    const co=c.country||'Unknown';
+    byCo[co]=(byCo[co]||0)+1;byCoARR[co]=(byCoARR[co]||0)+c.arr;
     if(!icpByCo[co])icpByCo[co]={};
     icpByCo[co][c.icp]=(icpByCo[co][c.icp]||0)+1;
   });
+  const coSorted=Object.entries(byCo).sort((a,b)=>b[1]-a[1]);
+  const maxCo=coSorted[0]?coSorted[0][1]:1;
+  const bySt={},byStARR={};
+  DATA.filter(c=>c.country==='United States').forEach(c=>{const st=c.state||'Unknown';bySt[st]=(bySt[st]||0)+1;byStARR[st]=(byStARR[st]||0)+c.arr;});
+  const stSorted=Object.entries(bySt).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxSt=stSorted[0]?stSorted[0][1]:1;
+  const tot=DATA.reduce((a,c)=>a+c.arr,0);
+  const usARR=DATA.filter(c=>c.country==='United States').reduce((a,c)=>a+c.arr,0);
+  const intl=DATA.filter(c=>c.country&&c.country!=='United States');
+  const intlARR=intl.reduce((a,c)=>a+c.arr,0);
+  const countries=Object.keys(byCo).filter(c=>c&&c!=='Unknown');
 
-  let html=`<div class="g2">
+  let html=`<div class="stats">
+    <div class="sc" style="border-color:#3b82f6"><div class="n" style="color:#3b82f6">${DATA.filter(c=>c.country==='United States').length}</div><div class="l">US Customers</div></div>
+    <div class="sc" style="border-color:#3b82f6"><div class="n" style="color:#3b82f6">${fmt(usARR)}</div><div class="l">US ARR (${tot?Math.round(usARR/tot*100):0}%)</div></div>
+    <div class="sc" style="border-color:#10b981"><div class="n" style="color:#10b981">${intl.length}</div><div class="l">Intl Customers</div></div>
+    <div class="sc" style="border-color:#10b981"><div class="n" style="color:#10b981">${fmt(intlARR)}</div><div class="l">Intl ARR (${tot?Math.round(intlARR/tot*100):0}%)</div></div>
+    <div class="sc" style="border-color:#555"><div class="n">${countries.length}</div><div class="l">Countries</div></div>
+  </div>
+  <div class="g2">
     <div class="card"><div class="st">Customers by Country</div>`;
   coSorted.forEach(([co,n])=>{
     const dom=Object.entries(icpByCo[co]||{}).sort((a,b)=>b[1]-a[1])[0];
     const col=dom?icpC(parseInt(dom[0])):'#555';
     const pct=(n/maxCo*100).toFixed(0);
     html+=`<div class="irow"><div class="il" style="color:${col}">${co}</div>
-      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}">
-        <span style="color:${col}">${n} · ${fmt(byCoARR[co])}</span></div></div></div>`;
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}"><span style="color:${col}">${n} · ${fmt(byCoARR[co])}</span></div></div></div>`;
   });
   html+=`</div>`;
-
-  if(stSorted.length>0){
-    const maxSt=stSorted[0][1];
+  if(stSorted.length){
     html+=`<div class="card"><div class="st">US Customers by State (top 10)</div>`;
     stSorted.forEach(([st,n])=>{
       const pct=(n/maxSt*100).toFixed(0);
       html+=`<div class="irow"><div class="il">${st}</div>
-        <div class="ibg"><div class="ibar" style="width:${pct}%;background:#3b82f633;border-left:3px solid #3b82f6">
-          <span style="color:#60a5fa">${n} · ${fmt(byStARR[st])}</span></div></div></div>`;
+        <div class="ibg"><div class="ibar" style="width:${pct}%;background:#3b82f633;border-left:3px solid #3b82f6"><span style="color:#60a5fa">${n} · ${fmt(byStARR[st])}</span></div></div></div>`;
     });
     html+=`</div>`;
   }
-  html+=`</div>`;
-
-  const usC=DATA.filter(c=>c.country==='United States').length;
-  const usARR=DATA.filter(c=>c.country==='United States').reduce((a,c)=>a+c.arr,0);
-  const intlARR=intl.reduce((a,c)=>a+c.arr,0);
-  const tot=DATA.reduce((a,c)=>a+c.arr,0);
-
-  html+=`<div class="stats" style="margin-bottom:16px">
-    <div class="sc" style="border-color:#3b82f6"><div class="n" style="color:#3b82f6">${usC}</div><div class="l">US Customers</div></div>
-    <div class="sc" style="border-color:#3b82f6"><div class="n" style="color:#3b82f6">${fmt(usARR)}</div><div class="l">US ARR (${Math.round(usARR/tot*100)}%)</div></div>
-    <div class="sc" style="border-color:#10b981"><div class="n" style="color:#10b981">${intl.length}</div><div class="l">Intl Customers</div></div>
-    <div class="sc" style="border-color:#10b981"><div class="n" style="color:#10b981">${fmt(intlARR)}</div><div class="l">Intl ARR (${Math.round(intlARR/tot*100)}%)</div></div>
-    <div class="sc" style="border-color:#555"><div class="n">${Object.keys(byCo).length}</div><div class="l">Countries</div></div>
-  </div>`;
-
-  html+=`<div class="card"><div class="st">International Accounts</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">`;
+  html+=`</div><div class="card"><div class="st">International Accounts</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">`;
   intl.sort((a,b)=>b.arr-a.arr).forEach(c=>{
-    html+=`<span title="${c.ind} | ${fmt(c.arr)}" style="background:${icpC(c.icp)}22;border:1px solid ${icpC(c.icp)}44;color:${icpC(c.icp)};padding:3px 9px;border-radius:4px;font-size:11px;font-weight:600">${c.n}<span style="color:var(--mt);font-weight:400"> · ${c.country}</span></span>`;
+    html+=`<span title="${c.ind} | ${fmt(c.arr)}" style="background:${icpC(c.icp)}22;border:1px solid ${icpC(c.icp)}44;color:${icpC(c.icp)};padding:3px 9px;border-radius:4px;font-size:11px;font-weight:600">${c.n} <span style="color:var(--mt);font-weight:400">· ${c.country}</span></span>`;
   });
   html+=`</div></div>`;
   document.getElementById('p3').innerHTML=html;
 }
 
 function renderP4(){
+  const tC={Enterprise:0,Large:0,'Mid-Market':0,'SMB/Startup':0,Unknown:0};
+  const tARR={Enterprise:0,Large:0,'Mid-Market':0,'SMB/Startup':0,Unknown:0};
+  const tCol={Enterprise:'#c084fc',Large:'#60a5fa','Mid-Market':'#4ade80','SMB/Startup':'#9ca3af',Unknown:'#374151'};
+  DATA.forEach(c=>{const t=szTier(c.emp).t;tC[t]++;tARR[t]+=c.arr;});
+  const maxTC=Math.max(...Object.values(tC));
+  const maxTA=Math.max(...Object.values(tARR));
+  const icpSz={};[1,2,3,4].forEach(k=>{icpSz[k]={};DATA.filter(c=>c.icp===k).forEach(c=>{const t=szTier(c.emp).t;icpSz[k][t]=(icpSz[k][t]||0)+1;});});
   const withEmp=DATA.filter(c=>c.emp&&c.emp>0);
-  const noEmp=DATA.filter(c=>!c.emp||c.emp===0);
-  const tiers={Enterprise:0,Large:0,'Mid-Market':0,'SMB/Startup':0,Unknown:0};
-  const tierARR={Enterprise:0,Large:0,'Mid-Market':0,'SMB/Startup':0,Unknown:0};
-  const tierColors={Enterprise:'#c084fc',Large:'#60a5fa','Mid-Market':'#4ade80','SMB/Startup':'#9ca3af',Unknown:'#374151'};
-  DATA.forEach(c=>{const t=szTier(c.emp).t;tiers[t]++;tierARR[t]+=c.arr;});
-  const maxT=Math.max(...Object.values(tiers));
-  const maxARR=Math.max(...Object.values(tierARR));
-
-  // emp vs arr scatter (use html bars as approximation)
-  const empBuckets=[
-    {l:'1–99',min:1,max:99},{l:'100–499',min:100,max:499},{l:'500–999',min:500,max:999},
-    {l:'1k–4.9k',min:1000,max:4999},{l:'5k–9.9k',min:5000,max:9999},{l:'10k–49k',min:10000,max:49999},{l:'50k+',min:50000,max:Infinity}
-  ];
-  const bucketCnt={},bucketARR={};
-  empBuckets.forEach(b=>{
-    const cs=DATA.filter(c=>c.emp&&c.emp>=b.min&&c.emp<=b.max);
-    bucketCnt[b.l]=cs.length;
-    bucketARR[b.l]=cs.reduce((a,c)=>a+c.arr,0);
-  });
+  const empTop=[...withEmp].sort((a,b)=>b.emp-a.emp).slice(0,10);
 
   let html=`<div class="stats">
     <div class="sc" style="border-color:#555"><div class="n">${withEmp.length}</div><div class="l">Have Emp Data</div></div>
-    <div class="sc" style="border-color:#374151"><div class="n">${noEmp.length}</div><div class="l">No Emp Data</div></div>
-    ${Object.entries(tiers).filter(([t])=>t!=='Unknown').map(([t,n])=>`<div class="sc" style="border-color:${tierColors[t]}"><div class="n" style="color:${tierColors[t]}">${n}</div><div class="l">${t}</div></div>`).join('')}
+    <div class="sc" style="border-color:#374151"><div class="n">${DATA.length-withEmp.length}</div><div class="l">No Emp Data</div></div>
+    ${['Enterprise','Large','Mid-Market','SMB/Startup'].map(t=>`<div class="sc" style="border-color:${tCol[t]}"><div class="n" style="color:${tCol[t]}">${tC[t]}</div><div class="l">${t}</div></div>`).join('')}
   </div>
   <div class="g2">
     <div class="card"><div class="st">Customer Count by Size Tier</div>`;
-  Object.entries(tiers).forEach(([t,n])=>{
-    const pct=maxT>0?(n/maxT*100).toFixed(0):0;
-    const col=tierColors[t];
-    html+=`<div class="irow"><div class="il" style="color:${col}">${t}</div>
-      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}">
-        <span style="color:${col}">${n}</span></div></div></div>`;
+  Object.entries(tC).forEach(([t,n])=>{
+    const pct=maxTC>0?(n/maxTC*100).toFixed(0):0;
+    html+=`<div class="irow"><div class="il" style="color:${tCol[t]}">${t}</div>
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${tCol[t]}33;border-left:3px solid ${tCol[t]}"><span style="color:${tCol[t]}">${n}</span></div></div></div>`;
   });
   html+=`</div><div class="card"><div class="st">ARR by Size Tier</div>`;
-  Object.entries(tierARR).forEach(([t,v])=>{
-    const pct=maxARR>0?(v/maxARR*100).toFixed(0):0;
-    const col=tierColors[t];
-    html+=`<div class="irow"><div class="il" style="color:${col}">${t}</div>
-      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${col}33;border-left:3px solid ${col}">
-        <span style="color:${col}">${fmt(v)}</span></div></div></div>`;
+  Object.entries(tARR).forEach(([t,v])=>{
+    const pct=maxTA>0?(v/maxTA*100).toFixed(0):0;
+    html+=`<div class="irow"><div class="il" style="color:${tCol[t]}">${t}</div>
+      <div class="ibg"><div class="ibar" style="width:${pct}%;background:${tCol[t]}33;border-left:3px solid ${tCol[t]}"><span style="color:${tCol[t]}">${fmt(v)}</span></div></div></div>`;
   });
-  html+=`</div></div>`;
-
-  // ICP x size
-  const icpSz={};[1,2,3,4].forEach(k=>{
-    const kc=DATA.filter(c=>c.icp===k);
-    icpSz[k]={};
-    kc.forEach(c=>{const t=szTier(c.emp).t;icpSz[k][t]=(icpSz[k][t]||0)+1;});
-  });
-
-  html+=`<div class="card" style="margin-bottom:14px"><div class="st">Size Tier × ICP Archetype</div>
-    <table class="matrix"><tr><th>Size Tier</th>${[1,2,3,4].map(k=>`<th style="color:${icpC(k)}">${ICP[k].l}</th>`).join('')}</tr>`;
+  html+=`</div></div>
+  <div class="g2">
+    <div class="card"><div class="st">Size Tier × ICP Matrix</div>
+      <table class="matrix"><tr><th>Tier</th>${[1,2,3,4].map(k=>`<th style="color:${icpC(k)}">${ICP[k].l}</th>`).join('')}</tr>`;
   ['Enterprise','Large','Mid-Market','SMB/Startup','Unknown'].forEach(t=>{
-    const col=tierColors[t];
-    html+=`<tr><td style="color:${col}">${t}</td>`;
+    html+=`<tr><td style="color:${tCol[t]}">${t}</td>`;
     [1,2,3,4].forEach(k=>{
       const v=icpSz[k]?.[t]||0;
-      html+=`<td><div class="cell" style="background:${v>0?col+'33':'transparent'};color:${v>0?col:'#374151'}">${v||'·'}</div></td>`;
+      html+=`<td><div class="cell" style="background:${v?tCol[t]+'33':'transparent'};color:${v?tCol[t]:'#374151'}">${v||'·'}</div></td>`;
     });
     html+=`</tr>`;
   });
-  html+=`</table></div>`;
-
-  const empSorted=[...DATA].filter(c=>c.emp).sort((a,b)=>b.emp-a.emp);
-  html+=`<div class="card"><div class="st">Largest Accounts by Employee Count</div><ul class="tlist">`;
-  empSorted.slice(0,10).forEach(c=>{
+  html+=`</table></div>
+    <div class="card"><div class="st">Largest by Employee Count</div><ul class="tlist">`;
+  empTop.forEach(c=>{
     html+=`<li><div class="tl"><div style="width:7px;height:7px;border-radius:50%;background:${icpC(c.icp)};flex-shrink:0"></div>
       <div><div style="font-size:11px;font-weight:600">${c.n}</div>
-      <div style="font-size:9px;color:var(--mt)">${ICP[c.icp].l} · ${fmt(c.arr)} ARR · ${c.country}</div></div></div>
-      <div class="tn" style="color:var(--mt)">${c.emp?.toLocaleString()} emp</div></li>`;
+      <div style="font-size:9px;color:var(--mt)">${ICP[c.icp].l} · ${fmt(c.arr)} · ${c.country}</div></div></div>
+      <div class="tn" style="color:var(--mt)">${c.emp?.toLocaleString()}</div></li>`;
   });
-  html+=`</ul></div>`;
+  html+=`</ul></div></div>`;
   document.getElementById('p4').innerHTML=html;
 }
-
-// Load CSV
-async function load(){
-  try{
-    const raw=await window.fs.readFile('hubspotcrmexportsviewforkris202604081.csv',{encoding:'utf8'});
-    const res=Papa.parse(raw,{header:true,skipEmptyLines:true,dynamicTyping:false});
-    DATA=parseData(res.data);
-    renderP0();
-  }catch(e){
-    document.getElementById('p0').innerHTML=`<div class="loading" style="color:#ef4444">Error loading file: ${e.message}</div>`;
-    console.error(e);
-  }
-}
-load();
 </script>
 </body>
 </html>
